@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">MedsTrackr</string>
+    <string name="drawer_open">Menu opened</string>
+    <string name="drawer_close">Menu closed</string>
+    <string name="action_settings">Settings</string>
+
+
+    <!-- AdMob ad unit IDs -->
+    <string name="banner_home_footer">ca-app-pub-8655431780005663/8972448034</string>
+    <string name="interstitial_full_screen">ca-app-pub-8655431780005663/1449181235</string>
+
+</resources>
