@@ -8,10 +8,20 @@
     <string name="view_history">View History</string>
     <string name="settings">Settings</string>
     <string name="about_app">About</string>
+    <string name="pres_tag">Prescription Tag</string>
+    <string name="new_pres">New Prescription</string>
+    <string name="drug_name">Name of Drug</string>
+    <string name="drug_dosage">Prescribed Dosage</string>
+    <string name="drug_interval">Usage Interval</string>
+    <string name="drug_duration">Usage Duration</string>
+    <string name="add_more_drugs">Add more drugs to prescription</string>
+    <string name="app_home">Home</string>
+    <string name="usage_interval">Usage Interval</string>
 
 
     <!-- AdMob ad unit IDs -->
     <string name="banner_home_footer">ca-app-pub-8655431780005663/8972448034</string>
     <string name="interstitial_full_screen">ca-app-pub-8655431780005663/1449181235</string>
+
 
 </resources>

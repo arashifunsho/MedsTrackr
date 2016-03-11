@@ -1,16 +1,18 @@
 package ng.softworks.unorthodox.medstrackr;
 
+
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import ng.softworks.unorthodox.medstrackr.NavDrawer.NavigationDrawerCallbacks;
 import ng.softworks.unorthodox.medstrackr.NavDrawer.NavigationDrawerFragment;
+import ng.softworks.unorthodox.medstrackr.layout.app_home;
+import ng.softworks.unorthodox.medstrackr.layout.fragment_add_prescription;
 
 
 public class MainActivity extends AppCompatActivity
@@ -30,18 +32,34 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(mToolbar);
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
-                getFragmentManager().findFragmentById(R.id.fragment_drawer);
+                getSupportFragmentManager().findFragmentById(R.id.fragment_drawer);
 
         // Set up the drawer.
         mNavigationDrawerFragment.setup(R.id.fragment_drawer, (DrawerLayout) findViewById(R.id.drawer), mToolbar);
-    }
 
+    }
     @Override
     public void onNavigationDrawerItemSelected(int position) {
-        // update the main content by replacing fragments
-        //Toast.makeText(this, "Menu item selected -> " + position, Toast.LENGTH_SHORT).show();
-    }
+        Fragment fragment;
+        switch (position) {
+            case 1: //loads fragment to add new prescription
+                fragment = getSupportFragmentManager().findFragmentByTag(fragment_add_prescription.TAG);
+                if (fragment == null) {
+                    fragment = new fragment_add_prescription();
+                }
+                getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment,
+                        fragment_add_prescription.TAG).commit();
+                break;
 
+            case 0: //loads home fragment displayed when app is first launched
+                fragment= getSupportFragmentManager().findFragmentByTag(app_home.TAG);
+                if (fragment==null) {
+                    fragment = new app_home();
+                }
+                    getSupportFragmentManager().beginTransaction().replace(R.id.container,fragment,app_home.TAG).commit();
+                    break;
+        }
+    }
 
     @Override
     public void onBackPressed() {

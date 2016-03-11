@@ -27,7 +27,7 @@ public class App_Splashscreen extends AppCompatActivity {
             public void run() {
                 // This method will be executed once the timer is over
                 // Start your app main activity
-                    Intent i = new Intent(App_Splashscreen.this,MainActivity.class);
+                    Intent i = new Intent(App_Splashscreen.this, MainActivity.class);
                     i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(i);
