@@ -5,6 +5,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
 import com.github.javiersantos.materialstyleddialogs.enums.Duration;
 
@@ -28,6 +30,12 @@ public class Messager {
                 .setDescription(_context.getResources().getString(Message))
                 .withDialogAnimation(true, Duration.NORMAL)
                 .setIcon(ContextCompat.getDrawable(_context, R.drawable.ic_info))
+                .setPositive(_context.getResources().getString(R.string.diag_OK),new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(MaterialDialog dialog, DialogAction which) {
+//                        Log.d("MaterialStyledDialogs", "Do something!");
+                    }
+                })
                 .build();
 
         mDialog.show();
