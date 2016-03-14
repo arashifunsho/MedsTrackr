@@ -158,9 +158,7 @@ public class fragment_add_prescription extends Fragment {
             dosage_measure.setError(R.string.dosage_measure);
             valid=false;
         }
-
         return  valid;
-
     }
 
 
@@ -168,6 +166,7 @@ public class fragment_add_prescription extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
+
     }
 
 }
