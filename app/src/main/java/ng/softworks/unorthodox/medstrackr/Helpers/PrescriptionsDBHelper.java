@@ -96,7 +96,8 @@ public class PrescriptionsDBHelper extends SQLiteOpenHelper{
 
 
     // Insert a drug prescription into the database
-    public void DBAddNewPrescription(Prescription prescription) {
+    public Boolean DBAddNewPrescription(Prescription prescription) {
+        boolean success= false;
         // Create and/or open the database for writing
         SQLiteDatabase db = getWritableDatabase();
 
@@ -117,12 +118,15 @@ public class PrescriptionsDBHelper extends SQLiteOpenHelper{
             // Notice how we haven't specified the primary key. SQLite auto increments the primary key column.
             db.insertOrThrow(TABLE_DrugPrescp, null, values);
             db.setTransactionSuccessful();
+            success=true;
         } catch (Exception e) {
             Log.d("DBAddNewPrescription", "Error while trying to add prescription details to " +
                     "database");
         } finally {
             db.endTransaction();
         }
+
+        return success;
     }
 
     //return all prescriptions (as history list)

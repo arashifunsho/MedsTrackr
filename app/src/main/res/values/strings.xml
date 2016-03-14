@@ -23,6 +23,8 @@
     <string name="error_usageinterval">Choose interval</string>
     <string name="error_drugduration">Choose duration</string>
     <string name="error_dosagemeasure">Choose drug measure</string>
+    <string name="diag_info_title">Information!</string>
+    <string name="diag_drug_usage">Drug Usage Alert</string>
 
 
 

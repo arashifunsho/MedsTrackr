@@ -16,6 +16,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnItemSelected;
 import fr.ganfra.materialspinner.MaterialSpinner;
+import ng.softworks.unorthodox.medstrackr.Helpers.PrescriptionsDBHelper;
+import ng.softworks.unorthodox.medstrackr.Models.Prescription;
 import ng.softworks.unorthodox.medstrackr.R;
 
 /**
@@ -38,6 +40,8 @@ public class fragment_add_prescription extends Fragment {
 
     private String[] DAYS,INTERVAL,MEASURE={"spoon(s)","tablet(s)", "lozenge(s)"}; // initialized for use
     // in the butterknife annotations
+
+    PrescriptionsDBHelper prescriptionsDBHelper;
 
     public fragment_add_prescription(){
 
@@ -93,15 +97,28 @@ public class fragment_add_prescription extends Fragment {
             }
         }); */
 
+        prescriptionsDBHelper= PrescriptionsDBHelper.getInstance(this
+                .getActivity());
+
 
     }
 
-    @OnClick(R.id.addMorePresc)
+    @OnClick(R.id.save_prescrip)
     private void OnClick(){
 
         if(validateDetails()){
             //TODO - SAVE DETAILS TO SQLITE DATABASE and figure out a way to prepare the alarm
             // notifications using service
+            Prescription prescription= new Prescription();
+            prescription.Drug_Name=drugName;
+            prescription.Drug_Dosage=drugDosage;
+            prescription.Dosage_Measure=Dmeasure;
+            prescription.Drug_Duration=Dduration;
+            prescription.Usage_Interval=Dusage;
+
+            if (prescriptionsDBHelper.DBAddNewPrescription(prescription)){
+                //TODO - CREATE A MESSAGER CLASS
+            }
         }
         //the texts from the spinners goes below these
     }
