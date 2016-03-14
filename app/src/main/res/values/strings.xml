@@ -25,6 +25,19 @@
     <string name="error_dosagemeasure">Choose drug measure</string>
     <string name="diag_info_title">Information!</string>
     <string name="diag_drug_usage">Drug Usage Alert</string>
+    <string name="info_presc_saved">Drug prescription has been stored. You will be notified
+    everytime drug use is due</string>
+    <string name="spinSelectInterval">Select Interval</string>
+    <string name="spinSelectDuration">Select Duration</string>
+    <string name="spinSelectMeasure">Drug Measure</string>
+    <string name="diag_OK">Proceed</string>
+
+    <string-array name="drugMeasureSpec">
+        <item>@string/spinSelectMeasure</item>
+        <item>spoon(s)</item>
+        <item>tablet(s)</item>
+        <item>lozenge(s)</item>
+    </string-array>
 
 
 

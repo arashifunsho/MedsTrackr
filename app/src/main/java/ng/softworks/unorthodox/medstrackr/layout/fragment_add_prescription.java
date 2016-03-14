@@ -4,6 +4,7 @@ package ng.softworks.unorthodox.medstrackr.layout;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnItemSelected;
 import fr.ganfra.materialspinner.MaterialSpinner;
+import ng.softworks.unorthodox.medstrackr.Helpers.Messager;
 import ng.softworks.unorthodox.medstrackr.Helpers.PrescriptionsDBHelper;
 import ng.softworks.unorthodox.medstrackr.Models.Prescription;
 import ng.softworks.unorthodox.medstrackr.R;
@@ -38,29 +40,31 @@ public class fragment_add_prescription extends Fragment {
 
     private String Dmeasure="", Dusage ="",Dduration="",drugName,drugDosage;
 
-    private String[] DAYS,INTERVAL,MEASURE={"spoon(s)","tablet(s)", "lozenge(s)"}; // initialized for use
+    private String[] DAYS,INTERVAL,MEASURE;
+     //
+    // initialized for use
     // in the butterknife annotations
 
-    PrescriptionsDBHelper prescriptionsDBHelper;
+    PrescriptionsDBHelper prescriptionsDBHelper; private Messager messager;
 
     public fragment_add_prescription(){
 
     }
-
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.add_prescription_fragment, container, false);
         ButterKnife.bind(this,view);
 
-        DAYS= new String[31];
-        INTERVAL= new String[24];
+        DAYS= new String[31]; DAYS[0]=getResources().getString(R.string.spinSelectDuration);
+        INTERVAL= new String[24]; INTERVAL[0]=getResources().getString(R.string.spinSelectInterval);
+        MEASURE= getResources().getStringArray(R.array.drugMeasureSpec); //LOADS THE STRING ARRAY
+        // OF DRUGS MEASUREMENTS IN USE
 
-        for (int i=0;i<=DAYS.length;i++)
-            DAYS[i]=Integer.toString(i + 1); //POPULATING THE DURATION ARRAY
+        for (int i=1;i<31;i++)
+            DAYS[i] = Integer.toString(i+1); //POPULATING THE DURATION ARRAY
 
-        for (int i=0;i<INTERVAL.length;i++)
+        for (int i=1;i<24;i++)
             INTERVAL[i]=Integer.toString(i+1);//POPULATING THE USAGE INTERVAL ARRAY
 
         //set "usage duration" spinner in fragment
@@ -70,7 +74,6 @@ public class fragment_add_prescription extends Fragment {
         DrugDuration.setAdapter(adapter1);
 
         //set "drug measure" spinner
-
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this.getActivity(), android.R
                 .layout.simple_spinner_item, MEASURE);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -100,11 +103,12 @@ public class fragment_add_prescription extends Fragment {
         prescriptionsDBHelper= PrescriptionsDBHelper.getInstance(this
                 .getActivity());
 
+        messager= new Messager(this.getActivity());
 
     }
 
     @OnClick(R.id.save_prescrip)
-    private void OnClick(){
+    void OnClick(){
 
         if(validateDetails()){
             //TODO - SAVE DETAILS TO SQLITE DATABASE and figure out a way to prepare the alarm
@@ -116,34 +120,57 @@ public class fragment_add_prescription extends Fragment {
             prescription.Drug_Duration=Dduration;
             prescription.Usage_Interval=Dusage;
 
+            //TODO - USE AUTOCOMPLETETEXTVIEW TO LOAD LISTS OF PREKNOWN DRUG NAMES SO AS TO EASE
+            // MANUAL ENTRY BY USER
             if (prescriptionsDBHelper.DBAddNewPrescription(prescription)){
-                //TODO - CREATE A MESSAGER CLASS
+                messager.showInfoDialog(R.string.info_presc_saved);
+                Log.e("AddNewDrugPresc", "drug added to db");
             }
         }
-        //the texts from the spinners goes below these
     }
 
     @OnItemSelected(R.id.dosage_measure)
-    private void onDosageMeasureItemSelected(int Position){
-        Dmeasure=MEASURE[Position];
+    void onDosageMeasureItemSelected(int Position){
+        switch (Position){
+            case 0:
+                Dmeasure="";
+                break;
+
+            default:
+                Dmeasure=MEASURE[Position];
+        }
+
     }
 
     @OnItemSelected(R.id.drug_duration)
-    private void onDrugDurationItemSelected(int Position){
-        Dduration= DAYS[Position];
+    void onDrugDurationItemSelected(int Position){
+        switch (Position){
+            case 0:
+                Dduration="";
+                break;
+            default:
+                Dduration= DAYS[Position];
+        }
     }
 
     @OnItemSelected(R.id.drug_usage_interval)
-    private void onDrugUsageItemSelected(int Position){
-        Dusage = INTERVAL[Position];
+    void onDrugUsageItemSelected(int Position){
+        switch (Position){
+            case 0:
+                Dusage="";
+                break;
+            default:
+                Dusage = INTERVAL[Position];
+        }
+
     }
 
     private boolean validateDetails(){
         boolean valid= true;
 
         //String PresTag = edtPrescTag.getText().toString();
-        drugName= edtDrugName.getText().toString();
-        drugDosage=edtDrugDosage.getText().toString();
+        drugName= edtDrugName.getText().toString().trim();
+        drugDosage=edtDrugDosage.getText().toString().trim();
 
         //validate edittexts
 
@@ -158,7 +185,6 @@ public class fragment_add_prescription extends Fragment {
                     .getDrawable(this.getActivity(), R.drawable.ic_error));
             valid=false;
         }
-
         //validate spinners
 
         if(Dusage.isEmpty()){

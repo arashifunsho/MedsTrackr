@@ -27,14 +27,14 @@ public class PrescriptionsDBHelper extends SQLiteOpenHelper{
     private static final int DATABASE_VERSION = 1;
 
     // Table Names
-    private static final String TABLE_DrugPrescp = "Drug_Prescriptions";
+    private static final String TABLE_DrugPrescp = "Drugs";
 
     // DRUGS PRESCRIPTION Table Columns
     private static final String KEY_ID = "id";
     private static final String KEY_DRUG_NAME = "drugname";
-    private static final String KEY_DRUG_DOSAGE="drugdosage";
-    private static final String KEY_DRUG_MEASURE="drugusemeasure";
-    private static final String KEY_DRUG_DURATION="drugduration";
+    private static final String KEY_DRUG_DOSAGE="drugdose";
+    private static final String KEY_DRUG_MEASURE="drugmeasure";
+    private static final String KEY_DRUG_DURATION="druguseduration";
     private static final String KEY_DRUG_USE_INTERVAL="usageinterval";
     private static final String KEY_DRUG_STATUS="drugstatus";
 
@@ -68,18 +68,18 @@ public class PrescriptionsDBHelper extends SQLiteOpenHelper{
     // If a database already exists on disk with the same DATABASE_NAME, this method will NOT be called.
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String CREATE_POSTS_TABLE = "CREATE TABLE " + TABLE_DrugPrescp +
+        String CREATE_DRUGS_TABLE = "CREATE TABLE " + TABLE_DrugPrescp +
                 "(" +
-                KEY_ID + " INTEGER AUTO INCREMENT PRIMARY KEY," + // Define a primary key
-                KEY_DRUG_NAME + " TEXT " +
-                KEY_DRUG_DOSAGE + " TEXT " +
-                KEY_DRUG_MEASURE + " TEXT " +
-                KEY_DRUG_USE_INTERVAL + " TEXT " +
-                KEY_DRUG_DURATION + " TEXT " +
-                KEY_DRUG_STATUS + " TEXT DEFAULT 'Active' " +
+                KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "+
+                KEY_DRUG_NAME + " TEXT, " +
+                KEY_DRUG_DOSAGE + " TEXT, " +
+                KEY_DRUG_MEASURE + " TEXT, " +
+                KEY_DRUG_USE_INTERVAL + " TEXT, " +
+                KEY_DRUG_DURATION + " TEXT, " +
+                KEY_DRUG_STATUS + " TEXT " +
                 ")";
 
-        db.execSQL(CREATE_POSTS_TABLE);
+        db.execSQL(CREATE_DRUGS_TABLE);
     }
 
     // Called when the database needs to be upgraded.
@@ -112,20 +112,18 @@ public class PrescriptionsDBHelper extends SQLiteOpenHelper{
             values.put(KEY_DRUG_DURATION,prescription.Drug_Duration);
             values.put(KEY_DRUG_MEASURE,prescription.Dosage_Measure);
             values.put(KEY_DRUG_USE_INTERVAL,prescription.Usage_Interval);
-            values.put(KEY_DRUG_STATUS,prescription.Drug_Status);
-
+            values.put(KEY_DRUG_STATUS,"Active");
 
             // Notice how we haven't specified the primary key. SQLite auto increments the primary key column.
             db.insertOrThrow(TABLE_DrugPrescp, null, values);
             db.setTransactionSuccessful();
             success=true;
         } catch (Exception e) {
-            Log.d("DBAddNewPrescription", "Error while trying to add prescription details to " +
+            Log.e("DBAddNewPrescription", "Error while trying to add prescription details to " +
                     "database");
         } finally {
             db.endTransaction();
         }
-
         return success;
     }
 
@@ -191,7 +189,4 @@ public class PrescriptionsDBHelper extends SQLiteOpenHelper{
         return db.update(TABLE_DrugPrescp, values, KEY_ID + " = ?",
                 new String[] { String.valueOf(prescription.Drug_id) });
     }
-
-
-
 }
