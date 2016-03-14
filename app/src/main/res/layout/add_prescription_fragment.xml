@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_alignParentBottom="true"
     android:layout_centerHorizontal="true"
     android:id="@+id/snackbarPosition">
@@ -30,14 +31,14 @@
 
                 android:orientation="vertical"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
                 android:paddingBottom="@dimen/activity_vertical_margin"
                 android:fitsSystemWindows="true">
 
 
-
+<!--
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -51,7 +52,7 @@
                         android:ems="10"
                         android:hint="@string/pres_tag"
                         />
-                </android.support.design.widget.TextInputLayout>
+                </android.support.design.widget.TextInputLayout>  -->
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
@@ -68,64 +69,88 @@
                         />
                 </android.support.design.widget.TextInputLayout>
 
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp">
-                    <EditText
-                        android:id="@+id/drug_dosage"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="textCapWords"
-                        android:ems="10"
-                        android:hint="@string/drug_dosage"
-                        />
-                </android.support.design.widget.TextInputLayout>
 
-                <android.support.design.widget.TextInputLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp">
-                    <EditText
-                        android:id="@+id/drug_usage_interval"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="textCapWords"
-                        android:ems="10"
-                        android:hint="@string/usage_interval"
-                        />
-                </android.support.design.widget.TextInputLayout>
+                    android:layout_height="wrap_content">
 
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
+                        <android.support.design.widget.TextInputLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginBottom="8dp"
+                            android:id="@+id/view">
+                        <EditText
+                            android:id="@+id/drug_dosage"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textCapWords"
+                            android:ems="10"
+                            android:hint="@string/drug_dosage"
+                            />
+                        </android.support.design.widget.TextInputLayout>
+
+                        <fr.ganfra.materialspinner.MaterialSpinner
+                            android:id="@+id/dosage_measure"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:ms_multiline="false"
+                            app:ms_enableFloatingLabel="true"
+                            app:ms_enableErrorLabel="true"
+                            app:ms_floatingLabelText="@string/dosage_measure"
+                            app:ms_baseColor="@color/base"
+                            app:ms_thickness="2dp"
+                            app:ms_arrowSize="16dp"
+                            app:ms_alignLabels="false"
+                            android:layout_alignTop="@+id/view"
+                            android:layout_toRightOf="@+id/view"
+                            android:layout_toEndOf="@+id/view"/>
+
+                </RelativeLayout>
+
+
+                <fr.ganfra.materialspinner.MaterialSpinner
+                    android:id="@+id/drug_usage_interval"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp">
-                    <EditText
-                        android:id="@+id/drug_duration"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="textCapWords"
-                        android:ems="10"
-                        android:hint="@string/drug_duration"
-                        />
-                </android.support.design.widget.TextInputLayout>
+                    app:ms_multiline="false"
+                    app:ms_enableFloatingLabel="true"
+                    app:ms_enableErrorLabel="true"
+                    app:ms_floatingLabelText="@string/usage_interval"
+                    app:ms_baseColor="@color/base"
+                    app:ms_thickness="2dp"
+                    app:ms_arrowSize="16dp"
+                    app:ms_alignLabels="false"/>
+
+
+                <fr.ganfra.materialspinner.MaterialSpinner
+                    android:id="@+id/drug_duration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:ms_multiline="false"
+                    app:ms_enableFloatingLabel="true"
+                    app:ms_enableErrorLabel="true"
+                    app:ms_floatingLabelText="@string/drug_duration"
+                    app:ms_baseColor="@color/base"
+                    app:ms_thickness="2dp"
+                    app:ms_arrowSize="16dp"
+                    app:ms_alignLabels="false"/>
 
                 <android.support.v7.widget.AppCompatButton
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Save"
+                    android:text="@string/save_pres"
+                    android:layout_gravity="center"
                     android:paddingBottom="8dp"
                     android:id="@+id/save_prescrip"/>
-                <TextView
+              <!--  <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:id="@+id/addMorePresc"
                     android:padding="8dp"
                     android:layout_gravity="center_horizontal"
                     android:textSize="18sp"
-                    android:text="@string/add_more_drugs"/>
+                    android:text="@string/add_more_drugs"/> -->
 
 
             </LinearLayout>
@@ -134,4 +159,5 @@
     </RelativeLayout>
 
 
-    </android.support.design.widget.CoordinatorLayout>
+
+</android.support.design.widget.CoordinatorLayout>

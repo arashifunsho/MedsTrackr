@@ -12,11 +12,19 @@
     <string name="new_pres">New Prescription</string>
     <string name="drug_name">Name of Drug</string>
     <string name="drug_dosage">Prescribed Dosage</string>
-    <string name="drug_interval">Usage Interval</string>
-    <string name="drug_duration">Usage Duration</string>
+    <string name="drug_duration">Usage Duration (days)</string>
     <string name="add_more_drugs">Add more drugs to prescription</string>
     <string name="app_home">Home</string>
-    <string name="usage_interval">Usage Interval</string>
+    <string name="usage_interval">Usage Interval (hours)</string>
+    <string name="dosage_measure">Dosage Measure</string>
+    <string name="save_pres">Save Prescription</string>
+    <string name="error_drugname">Drug name cannot be empty</string>
+    <string name="error_drugdosage">Drug dosage amount cannot be empty</string>
+    <string name="error_usageinterval">Choose interval</string>
+    <string name="error_drugduration">Choose duration</string>
+    <string name="error_dosagemeasure">Choose drug measure</string>
+
+
 
 
     <!-- AdMob ad unit IDs -->
