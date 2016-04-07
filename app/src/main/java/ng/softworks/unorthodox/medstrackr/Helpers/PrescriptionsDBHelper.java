@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ng.softworks.unorthodox.medstrackr.Models.Prescription;
+import ng.softworks.unorthodox.medstrackr.Models.PrescriptionPOJO;
 
 /**
  * Created by unorthodox on 14/03/16.
@@ -128,9 +129,40 @@ public class PrescriptionsDBHelper extends SQLiteOpenHelper{
     }
 
     //return all prescriptions (as history list)
-    public List<Prescription>getAllPrescriptions(){
+    public List<PrescriptionPOJO> getAllPrescriptions(){
         String Query=String.format("SELECT * FROM %s ", TABLE_DrugPrescp);
-        return getPrescriptions(Query);
+        List<PrescriptionPOJO> prescriptionList= new ArrayList<>();
+
+        // "getReadableDatabase()" and "getWriteableDatabase()" return the same object (except under low
+        // disk space scenarios)
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery(Query, null);
+        try {
+            if (cursor.moveToFirst()) {
+                do {
+                    PrescriptionPOJO prescriptions = new PrescriptionPOJO();
+                    prescriptions.setDrugName(cursor.getString(cursor.getColumnIndex
+                            (KEY_DRUG_NAME)));
+                    prescriptions.setDrugMeasure(cursor.getString(cursor.getColumnIndex
+                            (KEY_DRUG_MEASURE)));
+                    prescriptions.setDrugDosage(cursor.getString(cursor.getColumnIndex(KEY_DRUG_DOSAGE)));
+                    prescriptions.setDrugDuration(cursor.getString(cursor.getColumnIndex
+                            (KEY_DRUG_DURATION)));
+                    prescriptions.setDrugStatus(cursor.getString(cursor.getColumnIndex(KEY_DRUG_STATUS)));
+                    prescriptions.setDrugID(cursor.getInt(cursor.getColumnIndex(KEY_ID)));
+
+                    prescriptionList.add(prescriptions); //add prescription to prescriptions list
+                } while(cursor.moveToNext());
+
+            }
+        } catch (Exception e) {
+            Log.d("DBReadAllPrescription", "Error while trying to get prescriptions from database");
+        } finally {
+            if (cursor != null && !cursor.isClosed()) {
+                cursor.close();
+            }
+        }
+        return prescriptionList;
     }
 
     // return all active prescriptions

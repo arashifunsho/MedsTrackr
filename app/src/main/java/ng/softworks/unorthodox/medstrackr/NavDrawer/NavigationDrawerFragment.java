@@ -3,29 +3,17 @@ package ng.softworks.unorthodox.medstrackr.NavDrawer;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
-import android.graphics.BitmapShader;
-import android.graphics.Canvas;
-import android.graphics.ColorFilter;
-import android.graphics.Paint;
-import android.graphics.PixelFormat;
-import android.graphics.Rect;
-import android.graphics.RectF;
-import android.graphics.Shader;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -124,7 +112,8 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
         items.add(new NavigationItem(getString(R.string.add_prescription), getResources().getDrawable(R.drawable.add_prescrip)));
         items.add(new NavigationItem(getString(R.string.edit_prescription), getResources().getDrawable(R.drawable.edit_prescrip)));
         items.add(new NavigationItem(getString(R.string.view_history), getResources().getDrawable(R.drawable.view_prescrip)));
-        items.add(new NavigationItem(getString(R.string.settings), getResources().getDrawable(R.drawable.app_settings)));
+        //items.add(new NavigationItem(getString(R.string.settings), getResources().getDrawable(R
+        //        .drawable.app_settings)));
         items.add(new NavigationItem(getString(R.string.about_app), getResources().getDrawable(R.drawable.about_app)));
         return items;
     }

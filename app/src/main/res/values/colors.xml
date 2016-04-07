@@ -190,6 +190,12 @@
     <color name="DarkBlue">#00008B</color>
     <color name="Navy">#000080</color>
 
+    <color name="list_divider">#d9d9d9</color>
+    <color name="list_row_start_color">@color/white</color>
+    <color name="list_row_end_color">@color/white</color>
+    <color name="list_row_hover_start_color">#ebeef0</color>
+    <color name="list_row_hover_end_color">#ebeef0</color>
+
     <drawable name="pressed_gray">#0c000000</drawable>
     <drawable name="selected_gray">#2c000000</drawable>
 </resources>

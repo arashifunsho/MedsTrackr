@@ -15,7 +15,7 @@
     <string name="drug_duration">Usage Duration (days)</string>
     <string name="add_more_drugs">Add more drugs to prescription</string>
     <string name="app_home">Home</string>
-    <string name="usage_interval">Usage Interval (hours)</string>
+    <string name="usage_interval">Usage Interval</string>
     <string name="dosage_measure">Dosage Measure</string>
     <string name="save_pres">Save Prescription</string>
     <string name="error_drugname">Drug name cannot be empty</string>
@@ -26,11 +26,16 @@
     <string name="diag_info_title">Information!</string>
     <string name="diag_drug_usage">Drug Usage Alert</string>
     <string name="info_presc_saved">Drug prescription has been stored. You will be notified
-    everytime drug use is due</string>
+    every time drug use is due</string>
     <string name="spinSelectInterval">Select Interval</string>
     <string name="spinSelectDuration">Select Duration</string>
     <string name="spinSelectMeasure">Drug Measure</string>
     <string name="diag_OK">Proceed</string>
+
+    <!-- RADIO BUTTON DESCRIPTION -->
+
+    <string name="rbHours">Hour(s)</string>
+    <string name="rbDays">Day(s)</string>
 
     <string-array name="drugMeasureSpec">
         <item>@string/spinSelectMeasure</item>
@@ -39,7 +44,17 @@
         <item>lozenge(s)</item>
     </string-array>
 
+    <!-- dialog boxes string resources -->
+    <string name="diagAddMore">More Drugs..</string>
+    <string name="diagAddmoreDesc">Do you want to add more drugs</string>
+    <string name="diagYes">YES</string>
+    <string name="diagNo">NO</string>
 
+
+    <!-- Menu titles string resources -->
+    <string name="menu_active">Active</string>
+    <string name="menu_completed">Completed</string>
+    <string name="menu_addmore">Add More</string>
 
 
     <!-- AdMob ad unit IDs -->

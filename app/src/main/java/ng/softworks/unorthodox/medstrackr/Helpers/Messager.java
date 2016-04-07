@@ -48,6 +48,12 @@ public class Messager {
                 .withDialogAnimation(true, Duration.NORMAL)
                 .setScrollable(true)
                 .setIcon(ContextCompat.getDrawable(_context, R.drawable.ic_drug_use))
+                .setPositive(_context.getResources().getString(R.string.diag_OK),new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(MaterialDialog dialog, DialogAction which) {
+//                        Log.d("MaterialStyledDialogs", "Do something!");
+                    }
+                })
                 .build();
 
         mDialog.show();

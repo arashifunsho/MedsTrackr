@@ -13,6 +13,7 @@ import ng.softworks.unorthodox.medstrackr.NavDrawer.NavigationDrawerCallbacks;
 import ng.softworks.unorthodox.medstrackr.NavDrawer.NavigationDrawerFragment;
 import ng.softworks.unorthodox.medstrackr.layout.app_home;
 import ng.softworks.unorthodox.medstrackr.layout.fragment_add_prescription;
+import ng.softworks.unorthodox.medstrackr.layout.fragment_prescription_history;
 
 
 public class MainActivity extends AppCompatActivity
@@ -42,6 +43,8 @@ public class MainActivity extends AppCompatActivity
     public void onNavigationDrawerItemSelected(int position) {
         Fragment fragment;
         switch (position) {
+            //TODO: check out what it looks like to set the title of the actionbar corresponding to
+            //current fragment
             case 1: //loads fragment to add new prescription
                 fragment = getSupportFragmentManager().findFragmentByTag(fragment_add_prescription.TAG);
                 if (fragment == null) {
@@ -49,6 +52,7 @@ public class MainActivity extends AppCompatActivity
                 }
                 getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment,
                         fragment_add_prescription.TAG).commit();
+                //mToolbar.setTitle(R.string.new_pres);
                 break;
 
             case 0: //loads home fragment displayed when app is first launched
@@ -58,6 +62,15 @@ public class MainActivity extends AppCompatActivity
                 }
                     getSupportFragmentManager().beginTransaction().replace(R.id.container,fragment,app_home.TAG).commit();
                     break;
+
+            case 3: //loads the prescription history fragment
+                fragment=getSupportFragmentManager().findFragmentByTag(fragment_prescription_history.TAG);
+                if (fragment==null){
+                    fragment= new fragment_prescription_history();
+                }
+                getSupportFragmentManager().beginTransaction().replace(R.id.container,fragment,
+                        fragment_prescription_history.TAG).commit();
+                break;
         }
     }
 
@@ -69,7 +82,7 @@ public class MainActivity extends AppCompatActivity
             super.onBackPressed();
     }
 
-
+/*
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if (!mNavigationDrawerFragment.isDrawerOpen()) {
@@ -90,13 +103,12 @@ public class MainActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
+        /*noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
+    } */
 
 }

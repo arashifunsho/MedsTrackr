@@ -70,19 +70,14 @@
                 </android.support.design.widget.TextInputLayout>
 
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
                         <android.support.design.widget.TextInputLayout
-                            android:layout_width="180dp"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
-                            android:layout_marginBottom="8dp"
-                            android:id="@+id/view">
+                            android:layout_marginBottom="8dp">
                         <EditText
                             android:id="@+id/drug_dosage"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="number"
                             android:ems="10"
@@ -92,7 +87,7 @@
 
                         <fr.ganfra.materialspinner.MaterialSpinner
                             android:id="@+id/dosage_measure"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:ms_multiline="false"
                             app:ms_enableFloatingLabel="true"
@@ -101,15 +96,12 @@
                             app:ms_baseColor="@color/base"
                             app:ms_thickness="2dp"
                             app:ms_arrowSize="16dp"
-                            app:ms_alignLabels="false"
-                            android:layout_toRightOf="@+id/view"
-                            android:layout_alignParentRight="true"
-                            android:layout_alignParentEnd="true"
-                            android:layout_alignTop="@+id/view"
-                            android:layout_alignBottom="@+id/view"/>
+                            app:ms_alignLabels="false"/>
 
-                </RelativeLayout>
 
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
                 <fr.ganfra.materialspinner.MaterialSpinner
                     android:id="@+id/drug_usage_interval"
@@ -124,6 +116,28 @@
                     app:ms_arrowSize="16dp"
                     app:ms_alignLabels="false"/>
 
+                    <RadioGroup
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/drug_usage_interval"
+                        android:id="@+id/radioGroup">
+
+                        <RadioButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/rbHours"
+                            android:id="@+id/rbHour"
+                            android:checked="true" />
+                        <RadioButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/rbDays"
+                            android:id="@+id/rbDay"
+                            android:checked="false" />
+                    </RadioGroup>
+
+
+                </RelativeLayout>
 
                 <fr.ganfra.materialspinner.MaterialSpinner
                     android:id="@+id/drug_duration"

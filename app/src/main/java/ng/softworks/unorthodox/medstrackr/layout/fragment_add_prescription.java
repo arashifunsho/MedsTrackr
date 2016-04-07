@@ -1,29 +1,46 @@
 package ng.softworks.unorthodox.medstrackr.layout;
 
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
+import com.github.javiersantos.materialstyleddialogs.enums.Duration;
+
+import java.util.HashMap;
 
 import butterknife.Bind;
+import butterknife.BindDrawable;
+import butterknife.BindString;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnItemSelected;
 import fr.ganfra.materialspinner.MaterialSpinner;
 import ng.softworks.unorthodox.medstrackr.Helpers.Messager;
 import ng.softworks.unorthodox.medstrackr.Helpers.PrescriptionsDBHelper;
+import ng.softworks.unorthodox.medstrackr.Helpers.SessionManager;
 import ng.softworks.unorthodox.medstrackr.Models.Prescription;
 import ng.softworks.unorthodox.medstrackr.R;
 
 /**
  * Created by unorthodox on 27/02/16.
+ * * This is the fragment class for the addprescription fragment layout
  *
  */
 public class fragment_add_prescription extends Fragment {
@@ -36,7 +53,14 @@ public class fragment_add_prescription extends Fragment {
     @Bind(R.id.drug_duration) MaterialSpinner DrugDuration;
     @Bind(R.id.drug_usage_interval) MaterialSpinner DrugUsage;
     @Bind(R.id.save_prescrip) Button savePresc;
-    //@Bind(R.id.addMorePresc)  TextView addMorePresc;
+    @Bind(R.id.radioGroup)RadioGroup rgUseGroup;
+    //@Bind(R.id.rbDay) RadioButton rDay; @Bind(R.id.rbHour) RadioButton rHour;
+    @BindString(R.string.diagAddMore) String diagMoreDrugs;
+    @BindString(R.string.diagAddmoreDesc)String diagdescAddmore;
+    @BindDrawable(R.drawable.ic_info) Drawable DiagaddmoreDrug;
+    @BindString(R.string.diagYes) String yes;
+    @BindString(R.string.diagNo)String no;
+    @BindString(R.string.info_presc_saved) String drugInfoSaved;
 
     private String Dmeasure="", Dusage ="",Dduration="",drugName,drugDosage;
 
@@ -45,10 +69,13 @@ public class fragment_add_prescription extends Fragment {
     // initialized for use
     // in the butterknife annotations
 
+    //todo -  search how to add different menu for each fragments
+
     PrescriptionsDBHelper prescriptionsDBHelper; private Messager messager;
+    SessionManager session;
 
     public fragment_add_prescription(){
-
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -91,19 +118,12 @@ public class fragment_add_prescription extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        /*
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        }); */
 
-        prescriptionsDBHelper= PrescriptionsDBHelper.getInstance(this
-                .getActivity());
-
+        prescriptionsDBHelper= PrescriptionsDBHelper.getInstance(this.getActivity());
+        session = new SessionManager(this.getActivity());
         messager= new Messager(this.getActivity());
+
+        setHasOptionsMenu(true);
 
     }
 
@@ -120,11 +140,38 @@ public class fragment_add_prescription extends Fragment {
             prescription.Drug_Duration=Dduration;
             prescription.Usage_Interval=Dusage;
 
-            //TODO - USE AUTOCOMPLETETEXTVIEW TO LOAD LISTS OF PREKNOWN DRUG NAMES SO AS TO EASE
+            //TODO - USE AUTOCOMPLETETEXTVIEW TO LOAD LISTS OF KNOWN DRUG NAMES SO AS TO EASE
             // MANUAL ENTRY BY USER
             if (prescriptionsDBHelper.DBAddNewPrescription(prescription)){
-                messager.showInfoDialog(R.string.info_presc_saved);
+                //messager.showInfoDialog(R.string.info_presc_saved);
                 Log.e("AddNewDrugPresc", "drug added to db");
+
+                //check if user input was persisted and clear if true
+                if(session.is_persisted)
+                    session.clearPresc_info();
+
+                //ask if user want to add more drugs
+                new MaterialStyledDialog(this.getActivity())
+                        .setTitle(diagMoreDrugs)
+                        .setDescription(drugInfoSaved+"\n"+diagdescAddmore)
+                        .setCancelable(false)
+                        .setScrollable(true)
+                        .withDialogAnimation(true, Duration.NORMAL)
+                        .setIcon(DiagaddmoreDrug)
+                        .setPositive(yes, new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(MaterialDialog dialog, DialogAction which) {
+                                clearInput();
+                            }
+                        })
+                        .setNegative(no, new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(MaterialDialog dialog, DialogAction which) {
+                                //todo load drug history fragment
+                            }
+                        })
+                        .show();
+
             }
         }
     }
@@ -139,6 +186,15 @@ public class fragment_add_prescription extends Fragment {
             default:
                 Dmeasure=MEASURE[Position];
         }
+
+    }
+
+    public void clearInput(){
+        edtDrugName.setText("");
+        edtDrugDosage.setText("");
+        dosage_measure.setSelection(0);
+        DrugDuration.setSelection(0);
+        DrugUsage.setSelection(0);
 
     }
 
@@ -212,4 +268,70 @@ public class fragment_add_prescription extends Fragment {
 
     }
 
+    //===============SET FRAGMENTS MENU ITEMS===============================================
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
+        inflater.inflate(R.menu.addpresc,menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        /*noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }*/
+
+        return super.onOptionsItemSelected(item);
+    }
+    //======================================================================================
+
+    //===============DATA PERSISTENCE FOR THE ADD PRESCRIPTION FRAGMENT=======================
+    @Override
+    public void onPause(){
+        super.onPause();
+
+        session.persist_add_presc(edtDrugName.getText().toString(), edtDrugDosage.getText().toString(),
+                String.valueOf(dosage_measure.getSelectedItemPosition()),String.valueOf(
+                DrugUsage.getSelectedItemPosition()), String.valueOf(DrugDuration.getSelectedItemPosition
+                ()));
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        HashMap <String,String> hashMap= session.retreive_addPres_info();//retrieve edt details
+        edtDrugName.setText(hashMap.get(session.DRUG_NAME));
+        edtDrugDosage.setText(hashMap.get(session.DRUG_DOSAGE));
+        int [] hash= session.retreive_addPres_info2(); //retrieve spinner details
+        dosage_measure.setSelection(hash[0]);
+        DrugDuration.setSelection(hash[2]);
+        DrugUsage.setSelection(hash[1]);
+    }
+
+    private void addDrugAlarmDetails(){
+
+        rgUseGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                RadioButton rb= (RadioButton)group.findViewById(checkedId);
+                switch (rb.getId()){
+                    case R.id.rbDay:
+                        //the interval of drug use is in days
+                        break;
+                    case R.id.rbHour:
+                        //th interval of drug use is in hours
+                        break;
+
+                }
+            }
+        });
+
+    }
 }
