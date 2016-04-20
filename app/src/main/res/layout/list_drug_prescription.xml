@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:focusable="true"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:clickable="true">
 
     <!-- PRESCRIPTION NAME -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
         android:id="@+id/list_drugItems"
-        android:layout_marginRight="8dp"
-        android:layout_marginEnd="8dp"
         android:textSize="@dimen/drug_name_list"
         android:textStyle="bold"
         />
@@ -21,8 +24,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/list_drugItemsStatus"
-        android:layout_alignTop="@+id/list_drugItems"
-        android:layout_toEndOf="@+id/list_drugItems"
-        android:layout_toRightOf="@+id/list_drugItems"/>
+        android:layout_below="@id/list_drugItems"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:textStyle="italic"/>
 
 </RelativeLayout>

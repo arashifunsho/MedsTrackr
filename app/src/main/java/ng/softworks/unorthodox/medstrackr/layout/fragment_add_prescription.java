@@ -69,8 +69,6 @@ public class fragment_add_prescription extends Fragment {
     // initialized for use
     // in the butterknife annotations
 
-    //todo -  search how to add different menu for each fragments
-
     PrescriptionsDBHelper prescriptionsDBHelper; private Messager messager;
     SessionManager session;
 

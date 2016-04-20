@@ -46,7 +46,7 @@ public class app_home extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         int color1= R.color.Blue; int color2=R.color.Red;int color3=R.color.Green;int color4=R.color.myPrimaryColor; int color5= R.color.White;
-        final ValueAnimator bgAnim= ValueAnimator.ofObject(new ArgbEvaluator(),color4,color5);
+        final ValueAnimator bgAnim= ValueAnimator.ofObject(new ArgbEvaluator(),color1,color4,color5);
         bgAnim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {

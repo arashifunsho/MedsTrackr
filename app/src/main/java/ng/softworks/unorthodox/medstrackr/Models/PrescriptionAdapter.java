@@ -25,6 +25,7 @@ public class PrescriptionAdapter extends RecyclerView.Adapter<PrescriptionAdapte
 
         public MyViewHolder(View view) {
             super(view);
+            ButterKnife.bind(this,view);
         }
     }
 
@@ -36,7 +37,6 @@ public class PrescriptionAdapter extends RecyclerView.Adapter<PrescriptionAdapte
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.list_drug_prescription, parent, false);
-        ButterKnife.bind(this,itemView);
         return new MyViewHolder(itemView);
     }
 
