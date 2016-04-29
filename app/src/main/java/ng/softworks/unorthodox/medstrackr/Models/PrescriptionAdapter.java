@@ -51,5 +51,5 @@ public class PrescriptionAdapter extends RecyclerView.Adapter<PrescriptionAdapte
     public int getItemCount() {
         return prescription.size();
     }
-//TODO - FIX ERROR null pointer exception list.size() in getitemCount of recyclerview
+
 }

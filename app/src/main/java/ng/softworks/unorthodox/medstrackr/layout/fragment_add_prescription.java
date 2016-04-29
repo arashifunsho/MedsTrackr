@@ -4,6 +4,7 @@ package ng.softworks.unorthodox.medstrackr.layout;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -66,8 +67,7 @@ public class fragment_add_prescription extends Fragment {
 
     private String[] DAYS,INTERVAL,MEASURE;
      //
-    // initialized for use
-    // in the butterknife annotations
+    // initialized for use in the butterknife annotations
 
     PrescriptionsDBHelper prescriptionsDBHelper; private Messager messager;
     SessionManager session;
@@ -165,7 +165,8 @@ public class fragment_add_prescription extends Fragment {
                         .setNegative(no, new MaterialDialog.SingleButtonCallback() {
                             @Override
                             public void onClick(MaterialDialog dialog, DialogAction which) {
-                                //todo load drug history fragment
+                                clearInput();
+                                showHistory();
                             }
                         })
                         .show();
@@ -288,7 +289,6 @@ public class fragment_add_prescription extends Fragment {
 
         return super.onOptionsItemSelected(item);
     }
-    //======================================================================================
 
     //===============DATA PERSISTENCE FOR THE ADD PRESCRIPTION FRAGMENT=======================
     @Override
@@ -318,8 +318,8 @@ public class fragment_add_prescription extends Fragment {
         rgUseGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                RadioButton rb= (RadioButton)group.findViewById(checkedId);
-                switch (rb.getId()){
+                RadioButton rb = (RadioButton) group.findViewById(checkedId);
+                switch (rb.getId()) {
                     case R.id.rbDay:
                         //the interval of drug use is in days
                         break;
@@ -331,5 +331,13 @@ public class fragment_add_prescription extends Fragment {
             }
         });
 
+    }
+    private void showHistory(){
+        FragmentManager fManager= getFragmentManager();
+        Fragment fragment=fManager.findFragmentByTag(fragment_prescription_history.TAG);
+        if (fragment==null){
+            fragment= new fragment_prescription_history();
+        }
+        fManager.beginTransaction().replace(R.id.container, fragment, fragment_prescription_history.TAG).commit();
     }
 }

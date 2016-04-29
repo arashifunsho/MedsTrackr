@@ -6,9 +6,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
-
 import ng.softworks.unorthodox.medstrackr.NavDrawer.NavigationDrawerCallbacks;
 import ng.softworks.unorthodox.medstrackr.NavDrawer.NavigationDrawerFragment;
 import ng.softworks.unorthodox.medstrackr.layout.app_home;

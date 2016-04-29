@@ -62,4 +62,8 @@ public class Messager {
     public void snackbar(View view, int message){
         Snackbar.make(view,message,Snackbar.LENGTH_LONG).show();
     }
+
+    public void snackbar(View view, String message){
+        Snackbar.make(view,message,Snackbar.LENGTH_LONG).show();
+    }
 }
