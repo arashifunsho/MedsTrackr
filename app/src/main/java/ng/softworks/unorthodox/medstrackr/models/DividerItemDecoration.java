@@ -1,4 +1,4 @@
-package ng.softworks.unorthodox.medstrackr.Models;
+package ng.softworks.unorthodox.medstrackr.models;
 
 import android.content.Context;
 import android.content.res.TypedArray;

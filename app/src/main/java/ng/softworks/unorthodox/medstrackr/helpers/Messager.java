@@ -1,4 +1,4 @@
-package ng.softworks.unorthodox.medstrackr.Helpers;
+package ng.softworks.unorthodox.medstrackr.helpers;
 
 import android.content.Context;
 import android.support.design.widget.Snackbar;

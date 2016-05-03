@@ -1,4 +1,4 @@
-package ng.softworks.unorthodox.medstrackr.Helpers;
+package ng.softworks.unorthodox.medstrackr.helpers;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -10,8 +10,8 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
-import ng.softworks.unorthodox.medstrackr.Models.Prescription;
-import ng.softworks.unorthodox.medstrackr.Models.PrescriptionPOJO;
+import ng.softworks.unorthodox.medstrackr.models.Prescription;
+import ng.softworks.unorthodox.medstrackr.models.PrescriptionPOJO;
 
 /**
  * Created by unorthodox on 14/03/16.
@@ -29,6 +29,7 @@ public class PrescriptionsDBHelper extends SQLiteOpenHelper{
 
     // Table Names
     private static final String TABLE_DrugPrescp = "Drugs";
+    private static final String TABLE_DrugPrescpCount= "DrugsCounter";
 
     // DRUGS PRESCRIPTION Table Columns
     private static final String KEY_ID = "id";
@@ -37,7 +38,13 @@ public class PrescriptionsDBHelper extends SQLiteOpenHelper{
     private static final String KEY_DRUG_MEASURE="drugmeasure";
     private static final String KEY_DRUG_DURATION="druguseduration";
     private static final String KEY_DRUG_USE_INTERVAL="usageinterval";
+    private static final String KEY_DRUG_USE_HRORDAY="usagehrorday";
     private static final String KEY_DRUG_STATUS="drugstatus";
+
+    //DRUG USE INTERVAL COUNTER TABLE COLUMNS
+
+    private static final String KEY_COUNT_ID = "countid";
+    private static final String KEY_COUNTS_LEFT="countsleft";
 
     public static synchronized PrescriptionsDBHelper getInstance(Context context) {
         // Use the application context, which will ensure that you
@@ -76,11 +83,20 @@ public class PrescriptionsDBHelper extends SQLiteOpenHelper{
                 KEY_DRUG_DOSAGE + " TEXT, " +
                 KEY_DRUG_MEASURE + " TEXT, " +
                 KEY_DRUG_USE_INTERVAL + " TEXT, " +
+                KEY_DRUG_USE_HRORDAY + " TEXT, " +
                 KEY_DRUG_DURATION + " TEXT, " +
                 KEY_DRUG_STATUS + " TEXT " +
                 ")";
 
+        String CREATE_COUNTS_TABLE = "CREATE TABLE " + TABLE_DrugPrescpCount +
+                "(" +
+                KEY_COUNT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "+
+                KEY_ID + " INTEGER, " +
+                KEY_COUNTS_LEFT + " TEXT " +
+                ")";
+
         db.execSQL(CREATE_DRUGS_TABLE);
+        db.execSQL(CREATE_COUNTS_TABLE);
     }
 
     // Called when the database needs to be upgraded.
@@ -91,6 +107,7 @@ public class PrescriptionsDBHelper extends SQLiteOpenHelper{
         if (oldVersion != newVersion) {
             // Simplest implementation is to drop all old tables and recreate them
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_DrugPrescp);
+            db.execSQL("DROP TABLE IF EXISTS " + TABLE_DrugPrescpCount);
             onCreate(db);
         }
     }
@@ -113,6 +130,7 @@ public class PrescriptionsDBHelper extends SQLiteOpenHelper{
             values.put(KEY_DRUG_DURATION,prescription.Drug_Duration);
             values.put(KEY_DRUG_MEASURE,prescription.Dosage_Measure);
             values.put(KEY_DRUG_USE_INTERVAL,prescription.Usage_Interval);
+            values.put(KEY_DRUG_USE_HRORDAY,prescription.Usage_HrOrDay);
             values.put(KEY_DRUG_STATUS,"Active");
 
             // Notice how we haven't specified the primary key. SQLite auto increments the primary key column.
@@ -141,15 +159,14 @@ public class PrescriptionsDBHelper extends SQLiteOpenHelper{
             if (cursor.moveToFirst()) {
                 do {
                     PrescriptionPOJO prescriptions = new PrescriptionPOJO();
-                    prescriptions.setDrugName(cursor.getString(cursor.getColumnIndex
-                            (KEY_DRUG_NAME)));
-                    prescriptions.setDrugMeasure(cursor.getString(cursor.getColumnIndex
-                            (KEY_DRUG_MEASURE)));
+                    prescriptions.setDrugName(cursor.getString(cursor.getColumnIndex(KEY_DRUG_NAME)));
+                    prescriptions.setDrugMeasure(cursor.getString(cursor.getColumnIndex(KEY_DRUG_MEASURE)));
                     prescriptions.setDrugDosage(cursor.getString(cursor.getColumnIndex(KEY_DRUG_DOSAGE)));
-                    prescriptions.setDrugDuration(cursor.getString(cursor.getColumnIndex
-                            (KEY_DRUG_DURATION)));
+                    prescriptions.setDrugDuration(cursor.getString(cursor.getColumnIndex(KEY_DRUG_DURATION)));
                     prescriptions.setDrugStatus(cursor.getString(cursor.getColumnIndex(KEY_DRUG_STATUS)));
                     prescriptions.setDrugID(cursor.getInt(cursor.getColumnIndex(KEY_ID)));
+                    prescriptions.setUsage_interval(cursor.getString(cursor.getColumnIndex(KEY_DRUG_USE_INTERVAL)));
+                    prescriptions.setUsage_hrorday(cursor.getString(cursor.getColumnIndex(KEY_DRUG_USE_HRORDAY)));
 
                     prescriptionList.add(prescriptions); //add prescription to prescriptions list
                 } while(cursor.moveToNext());
@@ -166,8 +183,9 @@ public class PrescriptionsDBHelper extends SQLiteOpenHelper{
     }
 
     // return all active prescriptions
-    public List<Prescription>getActivePrescriptions(String id){
-        String Query=String.format("SELECT * FROM %s WHERE %s = %s", TABLE_DrugPrescp,KEY_ID,id);
+    public List<Prescription>getActivePrescriptions(){
+        String Query=String.format("SELECT * FROM %s WHERE %s = %s", TABLE_DrugPrescp,
+                KEY_DRUG_STATUS,"Active");
         return getPrescriptions(Query);
     }
 
@@ -191,6 +209,8 @@ public class PrescriptionsDBHelper extends SQLiteOpenHelper{
                     newPresc.Drug_Duration = cursor.getString(cursor.getColumnIndex(KEY_DRUG_DURATION));
                     newPresc.Drug_Status = cursor.getString(cursor.getColumnIndex(KEY_DRUG_STATUS));
                     newPresc.Drug_id = cursor.getString(cursor.getColumnIndex(KEY_ID));
+                    newPresc.Usage_HrOrDay=cursor.getString(cursor.getColumnIndex(KEY_DRUG_USE_HRORDAY));
+                    newPresc.Usage_Interval=cursor.getString(cursor.getColumnIndex(KEY_DRUG_USE_INTERVAL));
 
                     prescriptions.add(newPresc); //add prescription to prescriptions list
                 } while(cursor.moveToNext());
@@ -215,9 +235,10 @@ public class PrescriptionsDBHelper extends SQLiteOpenHelper{
         values.put(KEY_DRUG_DURATION,prescription.Drug_Duration);
         values.put(KEY_DRUG_MEASURE,prescription.Dosage_Measure);
         values.put(KEY_DRUG_USE_INTERVAL,prescription.Usage_Interval);
+        values.put(KEY_DRUG_USE_HRORDAY,prescription.Usage_HrOrDay);
         values.put(KEY_DRUG_STATUS,prescription.Drug_Status);
 
-        // Updating profile picture url for user with that userName
+        // Updating
         return db.update(TABLE_DrugPrescp, values, KEY_ID + " = ?",
                 new String[] { String.valueOf(prescription.Drug_id) });
     }

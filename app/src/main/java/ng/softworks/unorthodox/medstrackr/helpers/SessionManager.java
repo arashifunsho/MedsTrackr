@@ -1,4 +1,4 @@
-package ng.softworks.unorthodox.medstrackr.Helpers;
+package ng.softworks.unorthodox.medstrackr.helpers;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -24,6 +24,7 @@ public class SessionManager {
     public static final String DRUG_DOSAGE= "DRUGDOSAGE";
     public static final String DRUG_MEASURE= "DRUGMEASURE";
     public static final String DRUG_INTERVAL= "DRUGINTERVAL";
+    public static final String DRUG_HRORDAY="DRUGHRORDAY";
     public static final String DRUG_DURATION = "DRUGDURATION";
     public boolean is_persisted=false;
 
@@ -36,12 +37,13 @@ public class SessionManager {
 
     //persist add prescription fragments
     public void persist_add_presc(String DrugName,String dosage, String measure,String interval,
-                                  String duration){
+                                  String hrOrDay,String duration){
         editor.putString(DRUG_NAME, DrugName);
         editor.putString(DRUG_DOSAGE, dosage);
         editor.putString(DRUG_MEASURE, measure);
         editor.putString(DRUG_INTERVAL, interval);
         editor.putString(DRUG_DURATION, duration);
+        editor.putString(DRUG_HRORDAY,hrOrDay);
         // commit changes
         editor.apply();
     }
@@ -53,11 +55,10 @@ public class SessionManager {
         HashMap<String,String> prescription = new HashMap<>();
         prescription.put(DRUG_NAME, preferences.getString(DRUG_NAME, null));
         prescription.put(DRUG_DOSAGE, preferences.getString(DRUG_DOSAGE, null));
-        //prescription.put(DRUG_MEASURE, String.valueOf(preferences.getString(DRUG_MEASURE, "0")));
-        //prescription.put(DRUG_INTERVAL, String.valueOf(preferences.getString(DRUG_INTERVAL,
-        // "0")));
-        //prescription.put(DRUG_DURATION, String.valueOf(preferences.getString(DRUG_DURATION,
-        // "0")));
+        prescription.put(DRUG_MEASURE, preferences.getString(DRUG_MEASURE, null));
+        prescription.put(DRUG_INTERVAL, preferences.getString(DRUG_INTERVAL,null));
+        prescription.put(DRUG_HRORDAY,preferences.getString(DRUG_HRORDAY,null));
+        prescription.put(DRUG_DURATION, preferences.getString(DRUG_DURATION, "0"));
         is_persisted=true;
         return prescription;
     }
@@ -68,8 +69,8 @@ public class SessionManager {
         //prescription.put(DRUG_MEASURE, preferences.getInt(DRUG_MEASURE, 0));
         //prescription.put(DRUG_INTERVAL, preferences.getInt(DRUG_INTERVAL, 0));
         //prescription.put(DRUG_DURATION, preferences.getInt(DRUG_DURATION, 0));
-        arr[0]= Integer.parseInt(preferences.getString(DRUG_MEASURE, "0"));
-        arr[1]= Integer.parseInt(preferences.getString(DRUG_INTERVAL,"0"));
+        //arr[0]= Integer.parseInt(preferences.getString(DRUG_MEASURE, "0"));
+        //arr[1]= Integer.parseInt(preferences.getString(DRUG_INTERVAL,"0"));
         arr[2]=Integer.parseInt(preferences.getString(DRUG_DURATION,"0"));
         is_persisted=true;
         return arr;
@@ -79,6 +80,7 @@ public class SessionManager {
         editor.remove(DRUG_NAME);
         editor.remove(DRUG_DURATION);
         editor.remove(DRUG_INTERVAL);
+        editor.remove(DRUG_HRORDAY);
         editor.remove(DRUG_DOSAGE);
         editor.remove(DRUG_MEASURE);
         editor.apply();

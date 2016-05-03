@@ -1,11 +1,18 @@
 package ng.softworks.unorthodox.medstrackr.layout;
 
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -13,11 +20,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -33,11 +42,12 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnItemSelected;
 import fr.ganfra.materialspinner.MaterialSpinner;
-import ng.softworks.unorthodox.medstrackr.Helpers.Messager;
-import ng.softworks.unorthodox.medstrackr.Helpers.PrescriptionsDBHelper;
-import ng.softworks.unorthodox.medstrackr.Helpers.SessionManager;
-import ng.softworks.unorthodox.medstrackr.Models.Prescription;
+import ng.softworks.unorthodox.medstrackr.helpers.Messager;
+import ng.softworks.unorthodox.medstrackr.helpers.PrescriptionsDBHelper;
+import ng.softworks.unorthodox.medstrackr.helpers.SessionManager;
+import ng.softworks.unorthodox.medstrackr.models.Prescription;
 import ng.softworks.unorthodox.medstrackr.R;
+import ng.softworks.unorthodox.medstrackr.service.AlarmReceiver;
 
 /**
  * Created by unorthodox on 27/02/16.
@@ -48,13 +58,20 @@ public class fragment_add_prescription extends Fragment {
     public static final String TAG = "add_prescription";
     //@Bind(R.id.fab) FloatingActionButton fab;
     //@Bind(R.id.prescription_tag) EditText edtPrescTag;
+    @Bind(R.id.Pdrug_dosage_tag)TextView drugDosageTag;
+    @Bind(R.id.Pdrug_usage_interval_tag)TextView drugIntervalTag;
+    @Bind(R.id.Pdrug_dosage) TextView Pdrug_Dosage;
+    @Bind(R.id.Pdosage_measure) TextView Pdosage_Measure;
+    @Bind(R.id.Pdrug_usage_interval) TextView Pdrug_usage_Interval;
+    @Bind(R.id.PdaysOrHours) TextView PdaysorHours;
     @Bind(R.id.drug_name) EditText edtDrugName;
-    @Bind(R.id.drug_dosage) EditText edtDrugDosage;
-    @Bind(R.id.dosage_measure) MaterialSpinner dosage_measure;
+    @Bind(R.id.snackbarPosition)CoordinatorLayout coordinatorLayout;
+   // @Bind(R.id.drug_dosage) EditText edtDrugDosage;
+    //@Bind(R.id.dosage_measure) MaterialSpinner dosage_measure;
     @Bind(R.id.drug_duration) MaterialSpinner DrugDuration;
-    @Bind(R.id.drug_usage_interval) MaterialSpinner DrugUsage;
+    //@Bind(R.id.drug_usage_interval) MaterialSpinner DrugUsage;
     @Bind(R.id.save_prescrip) Button savePresc;
-    @Bind(R.id.radioGroup)RadioGroup rgUseGroup;
+    //@Bind(R.id.radioGroup)RadioGroup rgUseGroup;
     //@Bind(R.id.rbDay) RadioButton rDay; @Bind(R.id.rbHour) RadioButton rHour;
     @BindString(R.string.diagAddMore) String diagMoreDrugs;
     @BindString(R.string.diagAddmoreDesc)String diagdescAddmore;
@@ -71,6 +88,7 @@ public class fragment_add_prescription extends Fragment {
 
     PrescriptionsDBHelper prescriptionsDBHelper; private Messager messager;
     SessionManager session;
+    private PendingIntent pendingIntent;
 
     public fragment_add_prescription(){
         setHasOptionsMenu(true);
@@ -80,6 +98,10 @@ public class fragment_add_prescription extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.add_prescription_fragment, container, false);
         ButterKnife.bind(this,view);
+
+        /* Retrieve a PendingIntent that will perform a broadcast */
+        Intent alarmIntent = new Intent(this.getActivity(), AlarmReceiver.class);
+        pendingIntent = PendingIntent.getBroadcast(this.getActivity(), 0, alarmIntent, 0);
 
         DAYS= new String[31]; DAYS[0]=getResources().getString(R.string.spinSelectDuration);
         INTERVAL= new String[24]; INTERVAL[0]=getResources().getString(R.string.spinSelectInterval);
@@ -98,17 +120,23 @@ public class fragment_add_prescription extends Fragment {
         adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         DrugDuration.setAdapter(adapter1);
 
-        //set "drug measure" spinner
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this.getActivity(), android.R
-                .layout.simple_spinner_item, MEASURE);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        dosage_measure.setAdapter(adapter);
+        Pdrug_Dosage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertCustomizedLayoutPrescribedDosage();
+            }
+        });
 
-        //set "drug interval" spinner
-        ArrayAdapter<String> adapter2 = new ArrayAdapter<>(this.getActivity(), android.R
-                .layout.simple_spinner_item, INTERVAL);
-        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        DrugUsage.setAdapter(adapter2);
+        Pdrug_usage_Interval.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertCustomizedLayoutDosageInterval();
+            }
+        });
+
+        //TODO - CREATE A PICKER DIALOG AND USE IT TO POPULATE THE DRUG USE INTERVAL FIELD
+
+        //TODO - CONVERT THE drug USE INTERVAL FROM DAYS TO HOURS AS IT IS MUCH EASIER TO WORKWITH HOURS
 
         return view;
     }
@@ -137,6 +165,7 @@ public class fragment_add_prescription extends Fragment {
             prescription.Dosage_Measure=Dmeasure;
             prescription.Drug_Duration=Dduration;
             prescription.Usage_Interval=Dusage;
+            prescription.Usage_HrOrDay=PdaysorHours.getText().toString();
 
             //TODO - USE AUTOCOMPLETETEXTVIEW TO LOAD LISTS OF KNOWN DRUG NAMES SO AS TO EASE
             // MANUAL ENTRY BY USER
@@ -174,7 +203,7 @@ public class fragment_add_prescription extends Fragment {
             }
         }
     }
-
+/*
     @OnItemSelected(R.id.dosage_measure)
     void onDosageMeasureItemSelected(int Position){
         switch (Position){
@@ -187,14 +216,16 @@ public class fragment_add_prescription extends Fragment {
         }
 
     }
-
+*/
     public void clearInput(){
         edtDrugName.setText("");
-        edtDrugDosage.setText("");
-        dosage_measure.setSelection(0);
+        Pdrug_Dosage.setText(getString(R.string.drug_dosage));
+        drugDosageTag.setVisibility(View.GONE);
+        Pdosage_Measure.setText("");
         DrugDuration.setSelection(0);
-        DrugUsage.setSelection(0);
-
+        Pdrug_usage_Interval.setText(getString(R.string.usage_interval));
+        PdaysorHours.setText("");
+        drugIntervalTag.setVisibility(View.GONE);
     }
 
     @OnItemSelected(R.id.drug_duration)
@@ -208,26 +239,14 @@ public class fragment_add_prescription extends Fragment {
         }
     }
 
-    @OnItemSelected(R.id.drug_usage_interval)
-    void onDrugUsageItemSelected(int Position){
-        switch (Position){
-            case 0:
-                Dusage="";
-                break;
-            default:
-                Dusage = INTERVAL[Position];
-        }
-
-    }
-
     private boolean validateDetails(){
         boolean valid= true;
 
         //String PresTag = edtPrescTag.getText().toString();
         drugName= edtDrugName.getText().toString().trim();
-        drugDosage=edtDrugDosage.getText().toString().trim();
-
-        //validate edittexts
+        drugDosage=Pdrug_Dosage.getText().toString().trim();
+        Dusage= Pdrug_usage_Interval.getText().toString().trim();
+        //validate edittexts and textviews
 
         if(drugName.isEmpty()){
             edtDrugName.setError(getString(R.string.error_drugname),ContextCompat
@@ -235,25 +254,26 @@ public class fragment_add_prescription extends Fragment {
             valid=false;
         }
 
-        if(drugDosage.isEmpty()){
-            edtDrugDosage.setError(getString(R.string.error_drugdosage), ContextCompat
-                    .getDrawable(this.getActivity(), R.drawable.ic_error));
+        if(drugDosage.equalsIgnoreCase(getString(R.string.drug_dosage))){
+            // TODO REPLACE WITH SNACKBAR edtDrugDosage.setError(getString(R.string.error_drugdosage), ContextCompat.getDrawable(this.getActivity(), R.drawable.ic_error));
             valid=false;
         }
         //validate spinners
 
-        if(Dusage.isEmpty()){
-            DrugUsage.setError(R.string.error_usageinterval);
+
+
+        if (Dmeasure.isEmpty()){
+            //TODO - SNACKBAR ERROR MESSAGE
+            valid=false;
+        }
+
+        if(Dusage.equalsIgnoreCase(getString(R.string.usage_interval))){
+           //TODO DISPLAY ERROR MESSAGE USING SNACKBAR DrugUsage.setError(R.string.error_usageinterval);
             valid=false;
         }
 
         if (Dduration.isEmpty()){
             DrugDuration.setError(R.string.error_drugduration);
-            valid=false;
-        }
-
-        if (Dmeasure.isEmpty()){
-            dosage_measure.setError(R.string.dosage_measure);
             valid=false;
         }
         return  valid;
@@ -295,43 +315,29 @@ public class fragment_add_prescription extends Fragment {
     public void onPause(){
         super.onPause();
 
-        session.persist_add_presc(edtDrugName.getText().toString(), edtDrugDosage.getText().toString(),
-                String.valueOf(dosage_measure.getSelectedItemPosition()),String.valueOf(
-                DrugUsage.getSelectedItemPosition()), String.valueOf(DrugDuration.getSelectedItemPosition
-                ()));
+        session.persist_add_presc(edtDrugName.getText().toString(), Pdrug_Dosage.getText().toString(),
+               Pdosage_Measure.getText().toString(),Pdrug_usage_Interval.getText().toString(),
+                PdaysorHours.getText().toString(), String.valueOf(DrugDuration.getSelectedItemPosition()));
     }
 
     @Override
     public void onResume(){
         super.onResume();
-        HashMap <String,String> hashMap= session.retreive_addPres_info();//retrieve edt details
-        edtDrugName.setText(hashMap.get(session.DRUG_NAME));
-        edtDrugDosage.setText(hashMap.get(session.DRUG_DOSAGE));
-        int [] hash= session.retreive_addPres_info2(); //retrieve spinner details
-        dosage_measure.setSelection(hash[0]);
-        DrugDuration.setSelection(hash[2]);
-        DrugUsage.setSelection(hash[1]);
+        if(session.is_persisted) {
+            HashMap<String, String> hashMap = session.retreive_addPres_info();//retrieve edt details
+            edtDrugName.setText(hashMap.get(session.DRUG_NAME));
+            Pdrug_Dosage.setText(hashMap.get(session.DRUG_DOSAGE));
+            PdaysorHours.setText(hashMap.get(session.DRUG_HRORDAY));
+            Pdrug_usage_Interval.setText(hashMap.get(session.DRUG_INTERVAL));
+            Pdosage_Measure.setText(hashMap.get(session.DRUG_MEASURE));
+            int[] hash = session.retreive_addPres_info2(); //retrieve spinner details
+            //dosage_measure.setSelection(hash[0]);
+            DrugDuration.setSelection(hash[2]);
+            //DrugUsage.setSelection(hash[1]); */
+        }
     }
 
-    private void addDrugAlarmDetails(){
 
-        rgUseGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                RadioButton rb = (RadioButton) group.findViewById(checkedId);
-                switch (rb.getId()) {
-                    case R.id.rbDay:
-                        //the interval of drug use is in days
-                        break;
-                    case R.id.rbHour:
-                        //th interval of drug use is in hours
-                        break;
-
-                }
-            }
-        });
-
-    }
     private void showHistory(){
         FragmentManager fManager= getFragmentManager();
         Fragment fragment=fManager.findFragmentByTag(fragment_prescription_history.TAG);
@@ -339,5 +345,159 @@ public class fragment_add_prescription extends Fragment {
             fragment= new fragment_prescription_history();
         }
         fManager.beginTransaction().replace(R.id.container, fragment, fragment_prescription_history.TAG).commit();
+    }
+
+    public void alertCustomizedLayoutPrescribedDosage(){
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity(),R.style.AppTheme_Dialog);
+
+        // get the layout inflater
+        LayoutInflater inflater = this.getActivity().getLayoutInflater();
+
+        View alertViews=inflater.inflate(R.layout.dialog_prescribed_dosage, null,false);
+
+        final EditText edtDrugDosage = (EditText) alertViews.findViewById(R.id.drug_dosage);
+        final MaterialSpinner dosage_measure = (MaterialSpinner)alertViews.findViewById (R.id.dosage_measure) ;
+        //set "drug measure" spinner
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this.getActivity(), android.R
+                .layout.simple_spinner_item, MEASURE);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        dosage_measure.setAdapter(adapter);
+
+        dosage_measure.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                switch (position) {
+                    case 0:
+                        Dmeasure="";
+                        break;
+
+                    default:
+                        Dmeasure=MEASURE[position];
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            //TODO - SHOW SNACKBAR PROMPTING TO SELECT AN ITEM
+            }
+        });
+
+        // inflate and set the layout for the dialog
+        // pass null as the parent view because its going in the dialog layout
+        builder.setView(alertViews)
+
+                // action buttons
+                .setPositiveButton(getString(R.string.diag_OK), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        if(edtDrugDosage.getText().toString().isEmpty())
+                            Pdrug_Dosage.setText(getString(R.string.drug_dosage));
+                        else {
+                            Pdrug_Dosage.setText(edtDrugDosage.getText());
+                            drugDosageTag.setVisibility(View.VISIBLE);
+                        }
+                        Pdosage_Measure.setText(Dmeasure);
+
+                    }
+                })
+                .setNegativeButton(getString(R.string.diag_Cancel), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // remove the dialog from the screen
+                    }
+                })
+                .show();
+
+        edtDrugDosage.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus) {
+                    // builder.getWindow().setSoftInputMode(WindowManager.LayoutParams
+                    // .SOFT_INPUT_STATE_ ALWAYS_VISIBLE);
+                    //TODO - FIX ABOVE CODE
+                }
+            }
+        });
+
+    }
+
+    public void alertCustomizedLayoutDosageInterval(){
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity(), R.style.AppTheme_Dialog);
+
+        // get the layout inflater
+        LayoutInflater inflater = this.getActivity().getLayoutInflater();
+
+        View alertViews = inflater.inflate(R.layout.dialog_dosage_interval, null,false);
+        MaterialSpinner DrugUsage = (MaterialSpinner)alertViews.findViewById(R.id.drug_usage_interval);
+
+        //set "drug interval" spinner
+        ArrayAdapter<String> adapter2 = new ArrayAdapter<>(this.getActivity(), android.R
+                .layout.simple_spinner_item, INTERVAL);
+        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        DrugUsage.setAdapter(adapter2);
+        DrugUsage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                switch (position) {
+                    case 0:
+                        Dusage=getString(R.string.usage_interval);
+                        break;
+
+                    default:
+                        Dusage=INTERVAL[position];
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                //TODO - SHOW SNACKBAR PROMPTING TO SELECT AN ITEM
+            }
+        });
+
+        RadioGroup rgUseGroup = (RadioGroup)alertViews.findViewById(R.id.radioGroup);
+        rgUseGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                RadioButton rb = (RadioButton) group.findViewById(checkedId);
+                switch (rb.getId()) {
+                    case R.id.rbDay:
+                        PdaysorHours.setText(getString(R.string.rbDays));
+                        break;
+                    default:
+                        PdaysorHours.setText(getString(R.string.rbHours));
+                        break;
+
+                }
+
+            }
+        });
+
+        builder.setView(alertViews)
+
+                // action buttons
+                .setPositiveButton(getString(R.string.diag_OK), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        Pdrug_usage_Interval.setText(Dusage);
+                        if(!Dusage.equalsIgnoreCase(getString(R.string.usage_interval)))
+                            drugIntervalTag.setVisibility(View.VISIBLE);
+                    }
+                })
+                .setNegativeButton(getString(R.string.diag_Cancel), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // remove the dialog from the screen
+                    }
+                })
+                .show();
+
+    }
+
+    public void ScheduleDrugEvent(int Interval){
+        AlarmManager manager = (AlarmManager) this.getActivity().getSystemService(Context.ALARM_SERVICE);
+
+        manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), Interval,
+                pendingIntent);
+
     }
 }

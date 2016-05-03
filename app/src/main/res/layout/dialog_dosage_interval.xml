@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_margin="11dp" >
+
+        <fr.ganfra.materialspinner.MaterialSpinner
+            android:id="@+id/drug_usage_interval"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:ms_multiline="false"
+            app:ms_enableFloatingLabel="true"
+            app:ms_enableErrorLabel="true"
+            app:ms_floatingLabelText="@string/usage_interval"
+            app:ms_baseColor="@color/base"
+            app:ms_thickness="2dp"
+            app:ms_arrowSize="16dp"
+            app:ms_alignLabels="false"/>
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/drug_usage_interval"
+            android:id="@+id/radioGroup">
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/rbHours"
+                android:id="@+id/rbHour"
+                android:checked="true" />
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/rbDays"
+                android:id="@+id/rbDay"
+                android:checked="false" />
+        </RadioGroup>
+
+
+    </RelativeLayout>
+
+
+
+</LinearLayout>

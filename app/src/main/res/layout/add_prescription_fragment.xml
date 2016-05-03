@@ -69,7 +69,76 @@
                         />
                 </android.support.design.widget.TextInputLayout>
 
+                <RelativeLayout
+                    android:layout_marginTop="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:id="@+id/Pdrug_dosage_tag"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginRight="5dp"
+                        android:text="@string/drugDosage"
+                        android:layout_marginBottom="8dp"
+                        android:visibility="gone"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:id="@+id/Pdrug_dosage"
+                        android:layout_height="wrap_content"
+                        android:text="@string/drug_dosage"
+                        android:layout_alignTop="@+id/Pdrug_dosage_tag"
+                        android:layout_toRightOf="@+id/Pdrug_dosage_tag"
+                        android:layout_toEndOf="@+id/Pdrug_dosage_tag"
+                        android:visibility="visible"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:id="@+id/Pdosage_measure"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@+id/Pdrug_dosage"
+                        android:layout_toRightOf="@+id/Pdrug_dosage"
+                        android:layout_toEndOf="@+id/Pdrug_dosage"/>
+
+                    </RelativeLayout>
+
+
+                <RelativeLayout
+                    android:layout_marginTop="20dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:id="@+id/Pdrug_usage_interval_tag"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginRight="5dp"
+                        android:text="@string/usageInterval"
+                        android:layout_marginBottom="8dp"
+                        android:visibility="gone"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:id="@+id/Pdrug_usage_interval"
+                        android:layout_height="wrap_content"
+                        android:text="@string/usage_interval"
+                        android:layout_alignTop="@+id/Pdrug_usage_interval_tag"
+                        android:layout_toRightOf="@+id/Pdrug_usage_interval_tag"
+                        android:layout_toEndOf="@+id/Pdrug_usage_interval_tag"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:id="@+id/PdaysOrHours"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@+id/Pdrug_usage_interval"
+                        android:layout_toRightOf="@+id/Pdrug_usage_interval"
+                        android:layout_toEndOf="@+id/Pdrug_usage_interval"/>
+
+                </RelativeLayout>
+<!--
                         <android.support.design.widget.TextInputLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -138,7 +207,7 @@
 
 
                 </RelativeLayout>
-
+-->
                 <fr.ganfra.materialspinner.MaterialSpinner
                     android:id="@+id/drug_duration"
                     android:layout_width="match_parent"

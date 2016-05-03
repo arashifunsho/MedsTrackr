@@ -1,4 +1,4 @@
-package ng.softworks.unorthodox.medstrackr.NavDrawer;
+package ng.softworks.unorthodox.medstrackr.navDrawer;
 
 
 import android.graphics.drawable.Drawable;

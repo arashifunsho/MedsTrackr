@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:orientation="vertical"
+                    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp">
+        <EditText
+            android:id="@+id/drug_dosage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:ems="10"
+            android:hint="@string/drug_dosage"
+            />
+    </android.support.design.widget.TextInputLayout>
+
+    <fr.ganfra.materialspinner.MaterialSpinner
+        android:id="@+id/dosage_measure"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:ms_multiline="false"
+        app:ms_enableFloatingLabel="true"
+        app:ms_enableErrorLabel="true"
+        app:ms_floatingLabelText="@string/dosage_measure"
+        app:ms_baseColor="@color/base"
+        app:ms_thickness="2dp"
+        app:ms_arrowSize="16dp"
+        app:ms_alignLabels="false"/>
+
+</LinearLayout>

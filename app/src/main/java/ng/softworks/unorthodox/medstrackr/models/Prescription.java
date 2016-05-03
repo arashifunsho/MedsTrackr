@@ -1,4 +1,4 @@
-package ng.softworks.unorthodox.medstrackr.Models;
+package ng.softworks.unorthodox.medstrackr.models;
 
 /**
  * Created by unorthodox on 14/03/16.
@@ -10,6 +10,7 @@ public class Prescription {
     public String Drug_Dosage;
     public String Dosage_Measure;
     public String Usage_Interval;
+    public String Usage_HrOrDay;
     public String Drug_Duration;
     public String Drug_Status;
     public String Drug_id;

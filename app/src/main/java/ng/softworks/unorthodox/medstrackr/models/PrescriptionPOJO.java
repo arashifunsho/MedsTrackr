@@ -1,4 +1,4 @@
-package ng.softworks.unorthodox.medstrackr.Models;
+package ng.softworks.unorthodox.medstrackr.models;
 
 /**
  * Created by unorthodox on 30/03/16.
@@ -7,18 +7,20 @@ package ng.softworks.unorthodox.medstrackr.Models;
  */
 public class PrescriptionPOJO {
 
-    private String drugname,drugstatus,dosage_measure,drug_dosage,dosage_duration; private int drugID;
+    private String drugname,drugstatus,dosage_measure,drug_dosage,dosage_duration, usage_interval, usage_hrorday;
+    private int drugID;
 
     public PrescriptionPOJO(){
 
     }
-    public PrescriptionPOJO(String drugname, String dosage_measure, String drug_dosage, String
-                            dosage_duration, String drugstatus, int drugID){
+    public PrescriptionPOJO(String drugname, String dosage_measure, String drug_dosage, String dosage_duration,String usage_interval, String usage_hrorday,String drugstatus, int drugID){
         this.drugname=drugname;
         this.drugID=drugID;
         this.drugstatus=drugstatus;
         this.dosage_measure=dosage_measure;
         this.dosage_duration=dosage_duration;
+        this.usage_interval=usage_interval;
+        this.usage_hrorday=usage_hrorday;
         this.drug_dosage=drug_dosage;
     }
 
@@ -63,5 +65,14 @@ public class PrescriptionPOJO {
     public void setDrugDuration(String name){
         this.dosage_duration=name;
     }
-
+    public String getUsage_interval(){
+        return usage_interval;
+    }
+    public void setUsage_interval(String interval){
+        this.usage_interval=interval;
+    }
+    public String getUsage_hrorday(){
+        return usage_hrorday;
+    }
+    public void setUsage_hrorday(String usage){this.usage_hrorday=usage;}
 }
