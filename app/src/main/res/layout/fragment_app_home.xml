@@ -2,8 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".layout.app_home">
-
+    tools:context=".fragmentlayout.app_home">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,7 +17,10 @@
             android:id="@+id/imageView3"
             android:layout_gravity="center_vertical" />
     </LinearLayout>
-    <!-- TODO: make home fragment change colours as in instagram UI, showing drugs pictures -->
-
+    <!-- TODO: make home fragment change colours as in instagram UI, showing drugs pictures, sleek designs -->
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/snack"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 </FrameLayout>

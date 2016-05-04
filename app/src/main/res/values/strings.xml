@@ -8,7 +8,6 @@
     <string name="view_history">View History</string>
     <string name="pres_history">Prescriptions History</string>
     <string name="settings">Settings</string>
-    <string name="about_app">About</string>
     <string name="pres_tag">Prescription Tag</string>
     <string name="new_pres">New Prescription</string>
     <string name="drug_name">Name of Drug:</string>
@@ -16,17 +15,23 @@
     <string name="drugDosage">Prescribed Dosage:</string>
     <string name="drug_dosage">Set Prescribed Dosage</string>
     <string name="drug_duration">Usage Duration (days):</string>
-    <string name="add_more_drugs">Add more drugs to prescription</string>
+    <string name="add_more_drugs">Add another prescription</string>
+    <string name="edit_presc_title">How to</string>
+    <string name="desc_edit_presc">Long-press a prescription to edit its content</string>
+    <string name="add_moredrugs">Save current prescription and add another one?</string>
     <string name="app_home">Home</string>
     <string name="usageInterval">Usage Interval:</string>
     <string name="usage_interval">Set Usage Interval</string>
     <string name="dosage_measure">Dosage Measure</string>
     <string name="save_pres">Save Prescription</string>
+    <string name="exit_app">Exit</string>
+    <string name="exit_diag">Do you want to close the app?</string>
     <string name="error_drugname">Drug name cannot be empty</string>
     <string name="error_drugdosage">Drug dosage amount cannot be empty</string>
     <string name="error_usageinterval">Choose interval</string>
     <string name="error_drugduration">Choose duration</string>
     <string name="error_dosagemeasure">Choose drug measure</string>
+    <string name="error_setIntervalType">Set Interval type(hour/day)</string>
     <string name="diag_info_title">Information!</string>
     <string name="diag_drug_usage">Drug Usage Alert</string>
     <string name="info_presc_saved">Drug prescription has been stored. You will be notified
@@ -41,6 +46,16 @@
 
     <string name="rbHours">Hour(s)</string>
     <string name="rbDays">Day(s)</string>
+
+    <!-- ABOUT APP DIALOG INFO -->
+    <string name="about_app">About MedsTrackr</string>
+    <string name="about_app_desc">This application was developed to solve the irregular
+        prescription usage by individuals. It removes the need to always remember drug use
+        times and reminds one when ever a prescription is due to be taken.</string>
+    <string name="app_version">Version: 1.0</string>
+    <string name="developer_name">Developer: Unorthodox Softworks Ltd</string>
+    <string name="developer_contact">Contact: unorthodox@cyberdude.com, +2347087362008,
+        +2349080702008</string>
 
     <string-array name="drugMeasureSpec">
         <item>@string/spinSelectMeasure</item>
@@ -59,7 +74,7 @@
     <!-- Menu titles string resources -->
     <string name="menu_active">Active</string>
     <string name="menu_completed">Completed</string>
-    <string name="menu_addmore">Add More</string>
+    <string name="menu_reset">Reset</string>
 
 
     <!-- AdMob ad unit IDs -->

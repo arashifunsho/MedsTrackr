@@ -8,8 +8,8 @@
         app:showAsAction="never"/>
 
     <item
-        android:id="@+id/menu_addMorepresc"
-        android:title="@string/menu_addmore"
+        android:id="@+id/menu_clearInput"
+        android:title="@string/menu_reset"
         app:showAsAction="never"/>
 
 </menu>

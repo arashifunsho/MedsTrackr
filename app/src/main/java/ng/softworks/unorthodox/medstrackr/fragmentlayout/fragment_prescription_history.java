@@ -1,4 +1,4 @@
-package ng.softworks.unorthodox.medstrackr.layout;
+package ng.softworks.unorthodox.medstrackr.fragmentlayout;
 
 
 import android.content.Context;
@@ -20,8 +20,6 @@ import android.widget.Toast;
 
 
 import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
-import com.github.javiersantos.materialstyleddialogs.enums.Duration;
-import com.github.javiersantos.materialstyleddialogs.enums.Style;
 
 import java.util.List;
 
@@ -150,7 +148,7 @@ public class fragment_prescription_history extends Fragment {
                 .withDialogAnimation(true, com.github.javiersantos.materialstyleddialogs.enums.Duration.NORMAL)
                 .withIconAnimation(true)
                 .setCancelable(false)
-                .setIcon(R.mipmap.ic_launcher)
+                .setIcon(R.drawable.ic_info)
                 .setPositive(getString(R.string.diag_OK),null)
                 .show();
 

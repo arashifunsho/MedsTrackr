@@ -3,6 +3,7 @@ package ng.softworks.unorthodox.medstrackr.helpers;
 import android.content.Context;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
+import android.view.LayoutInflater;
 import android.view.View;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -25,21 +26,34 @@ public class Messager {
         mDialog= new MaterialStyledDialog(context);
     }
 
-    public void showInfoDialog(int Message){
-        mDialog.setTitle(_context.getResources().getString(R.string.diag_info_title))
+    public void showInfoDialog(int title,int Message){
+        mDialog
+                .setTitle(_context.getResources().getString(title))
                 .setDescription(_context.getResources().getString(Message))
-                .withDialogAnimation(true, Duration.NORMAL)
+                .withIconAnimation(true)
+                .setCancelable(false)
+                .withDialogAnimation(true,Duration.NORMAL)
                 .setIcon(ContextCompat.getDrawable(_context, R.drawable.ic_info))
-                .setPositive(_context.getResources().getString(R.string.diag_OK),new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(MaterialDialog dialog, DialogAction which) {
-//                        Log.d("MaterialStyledDialogs", "Do something!");
-                    }
-                })
+                .setPositive(_context.getResources().getString(R.string.diag_OK),null)
                 .build();
 
         mDialog.show();
 
+    }
+
+    public void showAboutDialog(){
+        LayoutInflater inflater=(LayoutInflater)_context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mDialog
+                .setTitle(_context.getResources().getString(R.string.about_app))
+                .setCustomView(inflater.inflate(R.layout.dialog_about_app,null))
+                .withIconAnimation(true)
+                .setCancelable(false)
+                .withDialogAnimation(true,Duration.NORMAL)
+                .setIcon(ContextCompat.getDrawable(_context, R.drawable.ic_info))
+                .setPositive(_context.getResources().getString(R.string.diag_OK),null)
+                .build();
+
+        mDialog.show();
     }
 
     public void dosageUseMsgDialog(String Message){

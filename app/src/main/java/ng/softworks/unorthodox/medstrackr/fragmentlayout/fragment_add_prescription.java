@@ -1,4 +1,4 @@
-package ng.softworks.unorthodox.medstrackr.layout;
+package ng.softworks.unorthodox.medstrackr.fragmentlayout;
 
 
 import android.app.AlarmManager;
@@ -134,8 +134,6 @@ public class fragment_add_prescription extends Fragment {
             }
         });
 
-        //TODO - CREATE A PICKER DIALOG AND USE IT TO POPULATE THE DRUG USE INTERVAL FIELD
-
         //TODO - CONVERT THE drug USE INTERVAL FROM DAYS TO HOURS AS IT IS MUCH EASIER TO WORKWITH HOURS
 
         return view;
@@ -155,6 +153,10 @@ public class fragment_add_prescription extends Fragment {
 
     @OnClick(R.id.save_prescrip)
     void OnClick(){
+        save_prescription();
+    }
+
+    private void save_prescription(){
 
         if(validateDetails()){
             //TODO - SAVE DETAILS TO SQLITE DATABASE and figure out a way to prepare the alarm
@@ -176,8 +178,7 @@ public class fragment_add_prescription extends Fragment {
                 //check if user input was persisted and clear if true
                 if(session.is_persisted)
                     session.clearPresc_info();
-
-                //ask if user want to add more drugs
+                 //ask if user want to add more drugs
                 new MaterialStyledDialog(this.getActivity())
                         .setTitle(diagMoreDrugs)
                         .setDescription(drugInfoSaved+"\n"+diagdescAddmore)
@@ -199,11 +200,12 @@ public class fragment_add_prescription extends Fragment {
                             }
                         })
                         .show();
-
             }
         }
     }
-/*
+
+    /*
+
     @OnItemSelected(R.id.dosage_measure)
     void onDosageMeasureItemSelected(int Position){
         switch (Position){
@@ -217,7 +219,7 @@ public class fragment_add_prescription extends Fragment {
 
     }
 */
-    public void clearInput(){
+    private void clearInput(){
         edtDrugName.setText("");
         Pdrug_Dosage.setText(getString(R.string.drug_dosage));
         drugDosageTag.setVisibility(View.GONE);
@@ -241,12 +243,13 @@ public class fragment_add_prescription extends Fragment {
 
     private boolean validateDetails(){
         boolean valid= true;
+        String errorMSG="";
 
         //String PresTag = edtPrescTag.getText().toString();
         drugName= edtDrugName.getText().toString().trim();
         drugDosage=Pdrug_Dosage.getText().toString().trim();
         Dusage= Pdrug_usage_Interval.getText().toString().trim();
-        //validate edittexts and textviews
+        //validate edittexts and textviews and spinners
 
         if(drugName.isEmpty()){
             edtDrugName.setError(getString(R.string.error_drugname),ContextCompat
@@ -255,20 +258,21 @@ public class fragment_add_prescription extends Fragment {
         }
 
         if(drugDosage.equalsIgnoreCase(getString(R.string.drug_dosage))){
-            // TODO REPLACE WITH SNACKBAR edtDrugDosage.setError(getString(R.string.error_drugdosage), ContextCompat.getDrawable(this.getActivity(), R.drawable.ic_error));
+            errorMSG+=getString(R.string.error_drugdosage)+"\n";
             valid=false;
         }
-        //validate spinners
-
-
-
         if (Dmeasure.isEmpty()){
-            //TODO - SNACKBAR ERROR MESSAGE
+            errorMSG+=getString(R.string.error_dosagemeasure)+"\n";
+            valid=false;
+        }
+
+        if(PdaysorHours.getText().toString().isEmpty()){
+            errorMSG+=getString(R.string.error_setIntervalType);
             valid=false;
         }
 
         if(Dusage.equalsIgnoreCase(getString(R.string.usage_interval))){
-           //TODO DISPLAY ERROR MESSAGE USING SNACKBAR DrugUsage.setError(R.string.error_usageinterval);
+           errorMSG+=getString(R.string.error_usageinterval)+"\n";
             valid=false;
         }
 
@@ -276,6 +280,8 @@ public class fragment_add_prescription extends Fragment {
             DrugDuration.setError(R.string.error_drugduration);
             valid=false;
         }
+        if(!valid)
+            new Messager(this.getActivity()).snackbar(coordinatorLayout,errorMSG);
         return  valid;
     }
 
@@ -300,12 +306,15 @@ public class fragment_add_prescription extends Fragment {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
-        /*noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }*/
+        switch (item.getItemId()){
+            case (R.id.menu_savePres):
+                save_prescription();
+                break;
+            case (R.id.menu_clearInput):
+                clearInput();
+                break;
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -338,16 +347,17 @@ public class fragment_add_prescription extends Fragment {
     }
 
 
-    private void showHistory(){
+    public void showHistory(){
         FragmentManager fManager= getFragmentManager();
         Fragment fragment=fManager.findFragmentByTag(fragment_prescription_history.TAG);
         if (fragment==null){
             fragment= new fragment_prescription_history();
         }
-        fManager.beginTransaction().replace(R.id.container, fragment, fragment_prescription_history.TAG).commit();
+        fManager.beginTransaction().replace(R.id.container, fragment,
+                fragment_prescription_history.TAG).addToBackStack(null).commit();
     }
 
-    public void alertCustomizedLayoutPrescribedDosage(){
+    private void alertCustomizedLayoutPrescribedDosage(){
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity(),R.style.AppTheme_Dialog);
 
@@ -379,7 +389,7 @@ public class fragment_add_prescription extends Fragment {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-            //TODO - SHOW SNACKBAR PROMPTING TO SELECT AN ITEM
+            new Messager(getActivity()).snackbar(coordinatorLayout,R.string.error_dosagemeasure);
             }
         });
 
@@ -421,7 +431,7 @@ public class fragment_add_prescription extends Fragment {
 
     }
 
-    public void alertCustomizedLayoutDosageInterval(){
+    private void alertCustomizedLayoutDosageInterval(){
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity(), R.style.AppTheme_Dialog);
 
@@ -451,7 +461,7 @@ public class fragment_add_prescription extends Fragment {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                //TODO - SHOW SNACKBAR PROMPTING TO SELECT AN ITEM
+                new Messager(getActivity()).snackbar(coordinatorLayout,R.string.error_usageinterval);
             }
         });
 
@@ -493,11 +503,12 @@ public class fragment_add_prescription extends Fragment {
 
     }
 
-    public void ScheduleDrugEvent(int Interval){
+    private void ScheduleDrugEvent(int Interval){
         AlarmManager manager = (AlarmManager) this.getActivity().getSystemService(Context.ALARM_SERVICE);
 
         manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), Interval,
                 pendingIntent);
 
     }
+    //TODO - USE MD5 ON THE CURRENT SYSTEM TIME AND SAVE THE LAST 7 CHARACTERS AS THE DRUG ID,ALSO TO BE USED AS THE PENDING INTENT ID
 }
