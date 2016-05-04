@@ -13,6 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import ng.softworks.unorthodox.medstrackr.R;
@@ -25,6 +28,7 @@ public class app_home extends Fragment {
     FragmentManager fragmentManager;
     Fragment fragment;
     public static final String TAG = "app_home";
+    AdView mAdView; AdRequest adRequest;
 
     public app_home() {
         // Required empty public constructor
@@ -40,6 +44,10 @@ public class app_home extends Fragment {
 
         ButterKnife.bind(this,view);
 
+        //CONFIGURING GOOGLE ADS
+         mAdView = (AdView) view.findViewById(R.id.adView);
+         adRequest = new AdRequest.Builder().addTestDevice
+                ("C177CEE7FAB6575475374B51FF096D48").addTestDevice(AdRequest.DEVICE_ID_EMULATOR).build();
         return view;
 
     }
@@ -61,6 +69,9 @@ public class app_home extends Fragment {
         bgAnim.setRepeatMode(bgAnim.REVERSE);
         bgAnim.setRepeatCount(bgAnim.INFINITE);
         bgAnim.start();
+
+        //show ads
+        mAdView.loadAd(adRequest);
 
     }
     //===============SET FRAGMENTS MENU ITEMS===============================================

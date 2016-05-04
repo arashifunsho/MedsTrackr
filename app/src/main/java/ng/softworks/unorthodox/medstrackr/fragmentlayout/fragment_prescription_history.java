@@ -20,6 +20,9 @@ import android.widget.Toast;
 
 
 import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 
 import java.util.List;
 
@@ -41,6 +44,7 @@ public class fragment_prescription_history extends Fragment {
     public static final String TAG = "prescription_history";
     private List<PrescriptionPOJO> pList;
     private PrescriptionAdapter pAdapter;
+    InterstitialAd mInterstitialAd;
 
     @Bind(R.id.recycler_view) RecyclerView recyclerView;
 
@@ -88,7 +92,31 @@ public class fragment_prescription_history extends Fragment {
             }
         }));
 
+        //SET UP FULL SCREEN ADS
+        mInterstitialAd = new InterstitialAd(this.getActivity());
+
+        // set the ad unit ID
+        mInterstitialAd.setAdUnitId(getString(R.string.interstitial_full_screen));
+
+        AdRequest adRequest = new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .addTestDevice("C177CEE7FAB6575475374B51FF096D48").build();
+
+        // Load ads into Interstitial Ads
+        mInterstitialAd.loadAd(adRequest);
+
+        mInterstitialAd.setAdListener(new AdListener() {
+            public void onAdLoaded() {
+                showInterstitial();
+            }
+        });
+
         return view;
+    }
+
+    private void showInterstitial() {
+        if (mInterstitialAd.isLoaded()) {
+            mInterstitialAd.show();
+        }
     }
 
     @Override

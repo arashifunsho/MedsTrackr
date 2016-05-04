@@ -32,6 +32,8 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
 import com.github.javiersantos.materialstyleddialogs.enums.Duration;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 import java.util.HashMap;
 
@@ -83,6 +85,7 @@ public class fragment_add_prescription extends Fragment {
     private String Dmeasure="", Dusage ="",Dduration="",drugName,drugDosage;
 
     private String[] DAYS,INTERVAL,MEASURE;
+    AdView mAdView;AdRequest adRequest;
      //
     // initialized for use in the butterknife annotations
 
@@ -135,7 +138,10 @@ public class fragment_add_prescription extends Fragment {
         });
 
         //TODO - CONVERT THE drug USE INTERVAL FROM DAYS TO HOURS AS IT IS MUCH EASIER TO WORKWITH HOURS
-
+        //CONFIGURING GOOGLE ADS
+        mAdView = (AdView) view.findViewById(R.id.adView1);
+        adRequest = new AdRequest.Builder().addTestDevice
+                ("C177CEE7FAB6575475374B51FF096D48").addTestDevice(AdRequest.DEVICE_ID_EMULATOR).build();
         return view;
     }
 
@@ -146,7 +152,7 @@ public class fragment_add_prescription extends Fragment {
         prescriptionsDBHelper= PrescriptionsDBHelper.getInstance(this.getActivity());
         session = new SessionManager(this.getActivity());
         messager= new Messager(this.getActivity());
-
+        mAdView.loadAd(adRequest);//load banner ads
         setHasOptionsMenu(true);
 
     }
@@ -288,6 +294,9 @@ public class fragment_add_prescription extends Fragment {
 
     @Override
     public void onDestroyView() {
+        if (mAdView != null) {
+            mAdView.destroy();
+        }
         super.onDestroyView();
         ButterKnife.unbind(this);
 
@@ -322,16 +331,22 @@ public class fragment_add_prescription extends Fragment {
     //===============DATA PERSISTENCE FOR THE ADD PRESCRIPTION FRAGMENT=======================
     @Override
     public void onPause(){
-        super.onPause();
-
+        if (mAdView != null) {
+            mAdView.pause();
+        }
         session.persist_add_presc(edtDrugName.getText().toString(), Pdrug_Dosage.getText().toString(),
                Pdosage_Measure.getText().toString(),Pdrug_usage_Interval.getText().toString(),
                 PdaysorHours.getText().toString(), String.valueOf(DrugDuration.getSelectedItemPosition()));
+        super.onPause();
     }
 
     @Override
     public void onResume(){
         super.onResume();
+        if (mAdView != null) {
+            mAdView.resume();
+        }
+
         if(session.is_persisted) {
             HashMap<String, String> hashMap = session.retreive_addPres_info();//retrieve edt details
             edtDrugName.setText(hashMap.get(session.DRUG_NAME));
