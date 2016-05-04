@@ -241,5 +241,6 @@ public class PrescriptionsDBHelper extends SQLiteOpenHelper{
         // Updating
         return db.update(TABLE_DrugPrescp, values, KEY_ID + " = ?",
                 new String[] { String.valueOf(prescription.Drug_id) });
+
     }
 }
